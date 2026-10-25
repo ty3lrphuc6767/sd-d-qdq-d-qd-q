@@ -1,0 +1,18 @@
+MOC CAFE - HUONG DAN NHANH
+
+1. Mo https://supabase.com/dashboard -> tao Project moi.
+2. Vao SQL Editor -> chay toan bo file supabase/schema.sql.
+3. Mo file supabase-config.js (NAM O THU MUC GOC, CUNG CAP VOI index.html).
+4. Dan Project URL va publishable key (KHONG DAN SERVICE_ROLE).
+5. Supabase Authentication -> Email -> bat Confirm email (neu muon).
+6. Authentication -> URL Configuration: them http://localhost:5500/login.html
+   (neu su dung Live Server port 5500; dung port va domain thuc te cua ban).
+7. Mo thu muc bang VS Code -> Live Server -> register.html de dang ky,
+   xac thuc email (neu bat), login.html de dang nhap.
+8. index.html quan ly don hang / san pham / khach hang / bao cao / realtime.
+
+Chua cau hinh Supabase: index.html tu mo ban xem truoc voi du lieu MINH HOA,
+khong luu vao database. Sau khi cau hinh, can dang nhap de xem du lieu that.
+
+Luu y: thanh toan chi DANH DAU DA THU TIEN THU CONG, chua ket noi ngan hang.
+Doc README.md de biet tat ca cac buoc, cach hoat dong va gioi han.

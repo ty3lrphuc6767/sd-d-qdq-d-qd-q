@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#211b16"><meta name="description" content="MỘC CAFÉ — hệ thống quản lý quán cà phê với Supabase">
+  <title>Tổng quan | MỘC CAFÉ Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/base.css"><link rel="stylesheet" href="./css/dashboard.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="./supabase-config.js"></script><script defer src="./js/dashboard.js"></script>
+</head>
+<body class="app-body">
+<div class="app-shell" id="appShell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="./index.html" aria-label="MỘC CAFÉ home"><span class="brand-icon">☕</span><span><strong>MỘC CAFÉ</strong><small>BUSINESS MANAGER</small></span></a>
+    <div class="side-label">KHÔNG GIAN LÀM VIỆC</div>
+    <nav class="side-nav" aria-label="Điều hướng">
+      <button class="nav-item active" data-view="overview"><span class="nav-ico">▦</span> Tổng quan</button>
+      <button class="nav-item" data-view="orders"><span class="nav-ico">▤</span> Đơn hàng <span class="nav-pill" id="navPending">0</span></button>
+      <button class="nav-item" data-view="cart"><span class="nav-ico">🛒</span> Giỏ hàng <span class="nav-pill" id="navCartCount">0</span></button>
+      <button class="nav-item" data-view="products"><span class="nav-ico">◈</span> Sản phẩm</button>
+      <button class="nav-item" data-view="customers"><span class="nav-ico">♙</span> Khách hàng</button>
+      <button class="nav-item" data-view="reports"><span class="nav-ico">▥</span> Báo cáo</button>
+    </nav>
+    <div class="side-label space-top">TÀI KHOẢN</div>
+    <div class="side-nav"><button class="nav-item" id="refreshBtn"><span class="nav-ico">↻</span> Làm mới dữ liệu</button><button class="nav-item" id="logoutBtn"><span class="nav-ico">↪</span> Đăng xuất</button></div>
+    <div class="sidebar-footer"><div class="sidebar-photo"></div><p>“Mỗi tách cà phê là một câu chuyện.”</p><span>Mộc Café · Since 2026</span></div>
+  </aside>
+  <div class="mobile-shade" id="mobileShade"></div>
+  <div class="main-side">
+    <header class="topbar">
+      <div class="topbar-left"><button class="icon-button mobile-menu" id="menuBtn" aria-label="Mở menu">☰</button><div><div class="breadcrumbs">Không gian quản lý <span>/</span> <span id="crumb">Tổng quan</span></div><div class="header-title" id="headerTitle">Tổng quan hoạt động</div></div></div>
+      <div class="topbar-right"><span class="live-pill" id="liveStatus"><i></i> Đang khởi tạo</span><div class="top-divider"></div><div class="user-avatar" id="userAvatar">M</div><div class="user-details"><strong id="userName">Mộc Café</strong><small id="userEmail">Quản trị cửa hàng</small></div></div>
+    </header>
+    <main class="page-content">
+      <section class="view" id="view-overview">
+        <div class="welcome-banner"><div class="welcome-content"><div class="eyebrow light">✦ HỆ THỐNG QUẢN LÝ QUÁN CÀ PHÊ</div><h1>Một ngày thật nhiều<br><em>cảm hứng</em> cùng Mộc.</h1><p>Đơn hàng, sản phẩm, khách quen — tất cả trong một không gian làm việc tinh gọn.</p><button class="btn btn-white" data-action="new-order">＋ Tạo đơn hàng <span>↗</span></button></div><div class="welcome-art"><div class="coffee-photo"></div><div class="floating-stamp">FRESH<br>DAILY <span>✳</span></div></div></div>
+        <div class="section-line"><div><h2>Chỉ số kinh doanh</h2><p>Cập nhật từ dữ liệu cửa hàng</p></div><span class="date-label" id="todayText"></span></div>
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-head"><span>Tổng doanh thu đã thu</span><span class="stat-icon mint">↗</span></div><strong id="statRevenue">—</strong><small>Từ các đơn đã thanh toán, không bị hủy</small></article>
+          <article class="stat-card"><div class="stat-head"><span>Đơn hàng hôm nay</span><span class="stat-icon peach">▤</span></div><strong id="statToday">—</strong><small>Đơn mới phát sinh trong ngày</small></article>
+          <article class="stat-card"><div class="stat-head"><span>Đơn chưa thanh toán</span><span class="stat-icon yellow">◷</span></div><strong id="statUnpaid">—</strong><small>Không tính đơn bị hủy</small></article>
+          <article class="stat-card"><div class="stat-head"><span>Sản phẩm trong menu</span><span class="stat-icon lavender">◈</span></div><strong id="statProducts">—</strong><small id="statProductDesc">Sản phẩm đang kinh doanh</small></article>
+        </div>
+        <div class="overview-grid">
+          <div class="surface chart-surface"><div class="card-heading"><div><h3>Doanh thu 7 ngày</h3><p>Tổng tiền được ghi nhận thanh toán</p></div><span class="mini-badge">7 NGÀY</span></div><div class="chart" id="revenueChart"></div><div class="chart-footer"><span>● Doanh thu (VNĐ)</span><strong id="weekTotal">—</strong></div></div>
+          <div class="surface quick-surface"><div class="card-heading"><div><h3>Thao tác nhanh</h3><p>Tiết kiệm thời gian mỗi ngày</p></div></div><button class="quick-action" data-action="new-order"><span class="quick-icon tan">＋</span><span><strong>Tạo đơn hàng mới</strong><small>Chọn món và xác nhận thanh toán</small></span><span class="arrow">↗</span></button><button class="quick-action" data-action="new-product"><span class="quick-icon green">◈</span><span><strong>Thêm sản phẩm</strong><small>Cập nhật menu của quán</small></span><span class="arrow">↗</span></button><button class="quick-action" data-action="new-customer"><span class="quick-icon coral">♙</span><span><strong>Thêm khách hàng</strong><small>Lưu thông tin khách quen</small></span><span class="arrow">↗</span></button><div class="quick-quote">☕ &nbsp;Coffee first, great business follows.</div></div>
+        </div>
+        <div class="surface"><div class="card-heading"><div><h3>Đơn hàng gần đây</h3><p>Hoạt động mới nhất của quán</p></div><button class="link-btn" data-switch="orders">Xem tất cả →</button></div><div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Thời gian</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead><tbody id="recentOrdersBody"></tbody></table></div></div>
+      </section>
+      <section class="view hidden" id="view-cart">
+        <div class="page-heading"><div><div class="eyebrow">ĐẶT MÓN TẠI QUẦY</div><h1>Giỏ hàng</h1><p>Chọn món từ menu, điều chỉnh số lượng và xác nhận đơn hàng.</p></div><button class="btn btn-outline" data-switch="products">← Thêm món từ menu</button></div>
+        <div class="checkout-layout">
+          <div class="surface cart-surface">
+            <div class="card-heading"><div><h3>Món đã chọn</h3><p id="cartItemSummary">0 món trong giỏ</p></div><button class="link-btn" data-action="clear-cart" id="clearCartBtn">Xóa toàn bộ</button></div>
+            <div id="cartPageItems" class="cart-page-items"></div>
+          </div>
+          <div class="surface checkout-surface">
+            <div class="card-heading"><div><h3>Xác nhận đơn hàng</h3><p>Đơn hàng chỉ được ghi nhận khi bấm Tạo đơn.</p></div></div>
+            <form id="checkoutForm" class="checkout-form">
+              <label for="cartCustomer">Khách hàng</label>
+              <select id="cartCustomer"><option value="">Khách lẻ</option></select>
+              <label for="cartMethod">Phương thức thanh toán</label>
+              <select id="cartMethod"><option value="cash">Tiền mặt</option><option value="transfer">Chuyển khoản</option><option value="card">Thẻ (ghi nhận thủ công)</option></select>
+              <label for="cartNote">Ghi chú đơn hàng</label>
+              <textarea id="cartNote" maxlength="1000" rows="3" placeholder="Ít đá, ít đường, mang đi..."></textarea>
+              <div class="checkout-total"><span>Tạm tính</span><strong id="cartPageTotal">0 ₫</strong></div>
+              <p class="checkout-hint">Giá sẽ được xác minh lại trên Supabase khi tạo đơn. Đánh dấu đã thu tiền tại trang Đơn hàng.</p>
+              <button id="checkoutBtn" class="btn btn-dark checkout-btn" type="submit">✓ Tạo đơn hàng</button>
+            </form>
+          </div>
+        </div>
+      </section>
+      <section class="view hidden" id="view-orders"><div class="page-heading"><div><div class="eyebrow">ORDER MANAGEMENT</div><h1>Quản lý đơn hàng</h1><p>Theo dõi đơn, trạng thái pha chế và thanh toán.</p></div><button class="btn btn-dark" data-action="new-order">＋ Tạo đơn mới</button></div><div class="surface"><div class="toolbar"><div class="searchbox"><span>⌕</span><input id="orderSearch" placeholder="Tìm mã đơn, khách hàng..." autocomplete="off"></div><select id="orderStatusFilter" aria-label="Lọc trạng thái"><option value="all">Mọi trạng thái</option><option value="new">Mới tạo</option><option value="preparing">Đang pha chế</option><option value="done">Hoàn tất</option><option value="cancelled">Đã hủy</option></select></div><div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày tạo</th><th>Thành tiền</th><th>Thanh toán</th><th>Trạng thái</th><th></th></tr></thead><tbody id="ordersBody"></tbody></table></div><div class="table-note" id="ordersCount"></div></div></section>
+      <section class="view hidden" id="view-products"><div class="page-heading"><div><div class="eyebrow">MENU MANAGEMENT</div><h1>Menu & sản phẩm</h1><p>Quản trị menu: thêm, sửa, xóa món và bán hàng trực tiếp.</p></div><div class="page-actions"><button class="btn btn-outline" data-switch="cart">🛒 Xem giỏ hàng <span id="productCartCount">(0)</span></button><button class="btn btn-dark" data-action="new-product">＋ Thêm sản phẩm</button></div></div><div class="toolbar standalone"><div class="searchbox"><span>⌕</span><input id="productSearch" placeholder="Tìm tên món, danh mục..." autocomplete="off"></div><select id="categoryFilter"><option value="all">Tất cả danh mục</option><option value="coffee">Cà phê</option><option value="tea">Trà</option><option value="juice">Nước ép</option><option value="cake">Bánh ngọt</option><option value="other">Khác</option></select></div><div class="product-grid" id="productsGrid"></div><div class="empty-footer hidden" id="productsEmpty"><p>Menu đang trống.</p><button class="btn btn-outline" id="seedProductsBtn">Tạo menu mẫu (6 món)</button></div></section>
+      <section class="view hidden" id="view-customers"><div class="page-heading"><div><div class="eyebrow">CUSTOMER RELATIONSHIP</div><h1>Khách hàng</h1><p>Lưu thông tin, chăm sóc và xây dựng cộng đồng khách quen.</p></div><button class="btn btn-dark" data-action="new-customer">＋ Thêm khách hàng</button></div><div class="surface"><div class="toolbar"><div class="searchbox"><span>⌕</span><input id="customerSearch" placeholder="Tìm tên, số điện thoại, email..." autocomplete="off"></div><span class="pill-neutral" id="customerCount">0 khách hàng</span></div><div class="table-wrap"><table><thead><tr><th>Khách hàng</th><th>Số điện thoại</th><th>Email</th><th>Đơn hàng</th><th>Ghi chú</th><th></th></tr></thead><tbody id="customersBody"></tbody></table></div></div></section>
+      <section class="view hidden" id="view-reports"><div class="page-heading"><div><div class="eyebrow">BUSINESS INSIGHTS</div><h1>Báo cáo kinh doanh</h1><p>Tổng hợp doanh thu và tình hình bán hàng từ dữ liệu thực tế.</p></div><button class="btn btn-outline" id="exportCsvBtn">↓ Xuất CSV đơn hàng</button></div><div class="report-grid"><div class="surface report-block"><small>DOANH THU ĐÃ THU</small><strong id="reportRevenue">—</strong><span>Không gồm đơn hủy</span></div><div class="surface report-block"><small>GIÁ TRỊ ĐƠN TRUNG BÌNH</small><strong id="reportAov">—</strong><span>Trên các đơn không hủy</span></div><div class="surface report-block"><small>TỔNG SỐ ĐƠN</small><strong id="reportOrders">—</strong><span>Gồm cả đơn đã hủy</span></div></div><div class="overview-grid report-bottom"><div class="surface"><div class="card-heading"><div><h3>Món bán chạy</h3><p>Theo số lượng sản phẩm trong đơn không bị hủy</p></div></div><div id="topProducts"></div></div><div class="surface"><div class="card-heading"><div><h3>Trạng thái đơn</h3><p>Phân loại toàn bộ đơn hàng</p></div></div><div id="orderBreakdown"></div></div></div><div class="report-disclaimer">Thanh toán chuyển khoản, tiền mặt và thẻ hiện được <strong>ghi nhận thủ công</strong>; chưa kết nối cổng thanh toán thực tế.</div></section>
+    </main>
+    <footer class="app-footer"><span>© 2026 MỘC CAFÉ · A better way to manage your coffee business.</span><span>Made with ♥ & Supabase</span></footer>
+  </div>
+</div>
+<div id="modalRoot" class="modal-root hidden" aria-live="polite"></div>
+<div id="toastArea" class="toast-area" aria-live="polite"></div>
+</body>
+</html>
